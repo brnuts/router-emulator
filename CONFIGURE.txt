@@ -1,0 +1,16 @@
+
+1: Create local directory to be persistent, example:
+mkdir /opt/router1
+
+2: Run empty router to copy /etc/
+docker run --name Example -d frrouting/frr -sh -c /etc/lib/frr/docker-start
+
+3: Copy /etc/ from the container to persistent directory
+docker cp Example:/etc/* /opt/router1
+
+4: Kill Example and remove it
+docker kill Example
+docker rm Example
+
+5: Run persistent router with restart enable so we can reboot Linux
+docker run --name Router1 -v /opt/router1:/etc --restart unless-stopped -d frrouting/frr sh -c /usr/lib/frr/docker-start
